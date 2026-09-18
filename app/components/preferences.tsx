@@ -168,7 +168,7 @@ export function MotionToggle() {
       type="button"
       onClick={toggleMotion}
       aria-label="Toggle the cursor-reactive background"
-      className={`${BUTTON_CLASS} tip-motion`}
+      className={`${BUTTON_CLASS} tip-motion motion-toggle`}
     >
       <svg
         className="pref-motion-on size-[17px]"

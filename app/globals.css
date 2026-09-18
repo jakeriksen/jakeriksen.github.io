@@ -82,6 +82,15 @@ body {
   }
 }
 
+/* No cursor to follow on a touch device, so the control has nothing to offer.
+   Those devices already default to ambient, which is the only sensible mode
+   there. */
+@media (hover: none) {
+  .motion-toggle {
+    display: none;
+  }
+}
+
 /* --- Tooltips ------------------------------------------------------------ */
 /* The label lives in CSS keyed off the preference attribute, so the server
    never has to guess which state it is in. */

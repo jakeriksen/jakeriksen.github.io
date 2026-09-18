@@ -2,7 +2,7 @@ export const site = {
   name: "Aleksander Eriksen",
   role: "Developer & entrepreneur",
   // Base for every RSS link and OG tag. Set this before deploying.
-  url: "https://example.com",
+  url: "https://jakeriksen.github.io",
   description:
     "Mechanical engineer by training, developer by habit. I build products and the companies around them.",
   /** The hero line. Keep it short. It is set large, in the display face. */

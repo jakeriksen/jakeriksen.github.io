@@ -1,26 +1,490 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Night is the default. The inline theme script always writes a concrete
+   data-theme, so the light palette needs one block and no media-query twin. */
+@theme {
+  --color-bg: #08090c;
+  --color-ink: #e9eaee;
+  --color-ink-dim: #9ba1ac;
+  --color-ink-faint: #646a76;
+  --color-line: #1c1f26;
+  --color-accent: #93abdf;
+  --color-surface: #0c0e13;
+  --color-on-accent: #0a0c10;
+
+  --font-display: var(--font-instrument-serif);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root[data-theme="light"] {
+  --color-bg: #dce7f2;
+  --color-ink: #0a0d12;
+  --color-ink-dim: #333d4a;
+  --color-ink-faint: #616c7a;
+  --color-line: #aebfd2;
+  --color-accent: #1d4478;
+  --color-surface: #eaf1f8;
+  --color-on-accent: #f4f8fc;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* The shader canvas sits at z-index -10, which paints above the body
+   background but below all content, so this colour is only ever the
+   pre-paint / no-WebGL fallback. */
+html {
+  background: var(--color-bg);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* --- Tooltips ------------------------------------------------------------ */
+/* The label lives in CSS keyed off the preference attribute, so the server
+   never has to guess which state it is in. */
+
+.tip {
+  position: relative;
+}
+
+.tip::after {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: calc(100% + 0.5rem);
+  translate: -50% 3px;
+  padding: 0.3rem 0.5rem 0.28rem;
+  border: 1px solid var(--color-line);
+  border-radius: 3px;
+  background: var(--color-surface);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.28);
+  color: var(--color-ink-dim);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.16s ease,
+    translate 0.16s ease;
+}
+
+.tip:hover::after,
+.tip:focus-visible::after {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+.tip-below::after {
+  bottom: auto;
+  top: calc(100% + 0.5rem);
+  translate: -50% -3px;
+}
+
+.tip-below:hover::after,
+.tip-below:focus-visible::after {
+  translate: -50% 0;
+}
+
+[data-theme="dark"] .tip-theme::after {
+  content: "Day";
+}
+
+[data-theme="light"] .tip-theme::after {
+  content: "Night";
+}
+
+[data-motion="on"] .tip-motion::after {
+  content: "Ambient";
+}
+
+[data-motion="off"] .tip-motion::after {
+  content: "Follow cursor";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tip::after {
+    transition: none;
+  }
+}
+
+.pref-theme-day,
+.pref-theme-night,
+.pref-motion-on,
+.pref-motion-off {
+  display: none;
+}
+
+[data-theme="dark"] /* --- Tooltips ------------------------------------------------------------ */
+/* The label lives in CSS keyed off the preference attribute, so the server
+   never has to guess which state it is in. */
+
+.tip {
+  position: relative;
+}
+
+.tip::after {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: calc(100% + 0.5rem);
+  translate: -50% 3px;
+  padding: 0.3rem 0.5rem 0.28rem;
+  border: 1px solid var(--color-line);
+  border-radius: 3px;
+  background: var(--color-surface);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.28);
+  color: var(--color-ink-dim);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.16s ease,
+    translate 0.16s ease;
+}
+
+.tip:hover::after,
+.tip:focus-visible::after {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+.tip-below::after {
+  bottom: auto;
+  top: calc(100% + 0.5rem);
+  translate: -50% -3px;
+}
+
+.tip-below:hover::after,
+.tip-below:focus-visible::after {
+  translate: -50% 0;
+}
+
+[data-theme="dark"] .tip-theme::after {
+  content: "Day";
+}
+
+[data-theme="light"] .tip-theme::after {
+  content: "Night";
+}
+
+[data-motion="on"] .tip-motion::after {
+  content: "Ambient";
+}
+
+[data-motion="off"] .tip-motion::after {
+  content: "Follow cursor";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tip::after {
+    transition: none;
+  }
+}
+
+.pref-theme-day,
+[data-theme="light"] .pref-theme-night,
+[data-motion="on"] .pref-motion-on,
+[data-motion="off"] .pref-motion-off {
+  display: inline;
+}
+
+/* --- Long-form markdown -------------------------------------------------- */
+/* Hand-rolled rather than @tailwindcss/typography: the whole point of the
+   page is a specific editorial voice, and the plugin's defaults fight it. */
+
+.prose {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--color-ink);
+}
+
+.prose > * + * {
+  margin-top: 1.4em;
+}
+
+.prose h2,
+.prose h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin-top: 2.6em;
+  margin-bottom: -0.4em;
+}
+
+.prose h2 {
+  font-size: 1.75rem;
+}
+
+.prose h3 {
+  font-size: 1.35rem;
+}
+
+.prose a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-accent) 65%, transparent);
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.prose a:hover {
+  color: var(--color-accent);
+}
+
+.prose strong {
+  font-weight: 600;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25rem;
+}
+
+.prose li + li {
+  margin-top: 0.4em;
+}
+
+.prose ul > li {
+  list-style: none;
+  position: relative;
+}
+
+.prose ul > li::before {
+  content: "—";
+  position: absolute;
+  left: -1.25rem;
+  color: var(--color-ink-faint);
+}
+
+.prose ol > li {
+  list-style: decimal;
+}
+
+.prose ol > li::marker {
+  color: var(--color-ink-faint);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.prose blockquote {
+  border-left: 1px solid var(--color-accent);
+  padding-left: 1.25rem;
+  color: var(--color-ink-dim);
+  font-style: italic;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  margin-block: 3em;
+}
+
+/* Images are rendered as figures so the alt text can double as a caption. */
+.prose figure {
+  margin-top: 2.4em;
+  margin-bottom: 2.4em;
+}
+
+/* max-width, never width: forcing a small asset to fill the column upscales
+   it, which is doubly visible on a 2x display. */
+.prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 3px;
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+}
+
+/* Light in both themes on purpose: the artwork that asks for a plate is dark
+   on transparency, which needs a light ground either way. */
+.prose .plate {
+  display: flex;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid var(--color-line);
+  border-radius: 3px;
+  padding: 2rem;
+}
+
+.prose .plate img {
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.prose figcaption {
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+  color: var(--color-ink-faint);
+}
+
+.prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 3px;
+  padding: 0.1em 0.35em;
+}
+
+.prose pre {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+
+.prose th,
+.prose td {
+  border-bottom: 1px solid var(--color-line);
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  text-align: left;
+}
+
+.prose th {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-dim);
+}
+
+/* --- Syntax highlighting (highlight.js class names) ---------------------- */
+
+.hljs-comment,
+.hljs-quote {
+  color: var(--color-ink-faint);
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-type {
+  color: #b29ae0;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition {
+  color: #7fb493;
+}
+
+.hljs-number,
+.hljs-symbol,
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable {
+  color: #d3a06a;
+}
+
+.hljs-title,
+.hljs-title.function_,
+.hljs-title.class_,
+.hljs-section {
+  color: #7fa8d8;
+}
+
+.hljs-built_in,
+.hljs-attribute,
+.hljs-meta {
+  color: var(--color-accent);
+}
+
+.hljs-deletion {
+  color: #d07b7b;
+}
+
+:root[data-theme="light"] .hljs-keyword,
+:root[data-theme="light"] .hljs-selector-tag,
+:root[data-theme="light"] .hljs-literal,
+:root[data-theme="light"] .hljs-type {
+  color: #6b3fa0;
+}
+
+:root[data-theme="light"] .hljs-string,
+:root[data-theme="light"] .hljs-regexp,
+:root[data-theme="light"] .hljs-addition {
+  color: #2f6b45;
+}
+
+:root[data-theme="light"] .hljs-number,
+:root[data-theme="light"] .hljs-symbol,
+:root[data-theme="light"] .hljs-attr,
+:root[data-theme="light"] .hljs-variable,
+:root[data-theme="light"] .hljs-template-variable {
+  color: #8a5520;
+}
+
+:root[data-theme="light"] .hljs-title,
+:root[data-theme="light"] .hljs-title.function_,
+:root[data-theme="light"] .hljs-title.class_,
+:root[data-theme="light"] .hljs-section {
+  color: #1f4f80;
+}
+
+:root[data-theme="light"] .hljs-deletion {
+  color: #a33a3a;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 600;
 }

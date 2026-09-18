@@ -307,7 +307,10 @@ export default function LightningClouds({
     let idlePainted = false;
 
     const RENDER_SCALE = 0.8;
-    const MAX_PIXELS = 1_100_000;
+    // Phones render this continuously in ambient mode, on a battery, behind a
+    // column of text. Half the budget is not noticeable through the haze.
+    const coarse = window.matchMedia("(hover: none)").matches;
+    const MAX_PIXELS = coarse ? 520_000 : 1_100_000;
     let quality = 1;
     let width = 0;
     let height = 0;
@@ -323,7 +326,15 @@ export default function LightningClouds({
       }
       w = Math.max(1, Math.round(w));
       h = Math.max(1, Math.round(h));
-      if (w === width && h === height) return;
+
+      // Mobile address bars resize the viewport on every scroll, and each
+      // resize reallocates and clears the drawing buffer, which reads as
+      // flicker. Ignore changes too small to see.
+      const settledSize =
+        width > 0 &&
+        Math.abs(w - width) <= width * 0.02 &&
+        Math.abs(h - height) <= height * 0.02;
+      if (settledSize || (w === width && h === height)) return;
       width = w;
       height = h;
       canvas.width = w;

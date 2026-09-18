@@ -105,7 +105,10 @@ const theme = createPreference({
 const motion = createPreference({
   attribute: "motion",
   storageKey: "motion",
-  media: "(prefers-reduced-motion: reduce)",
+  // A phone has no cursor to follow, so tracking would leave the scene dark
+  // except during a drag. "hover: none" picks those devices and starts them in
+  // ambient instead. Comma is OR in a media query list.
+  media: "(prefers-reduced-motion: reduce), (hover: none)",
   matched: "off",
   other: "on",
 });

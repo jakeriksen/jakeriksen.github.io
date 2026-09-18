@@ -66,6 +66,22 @@ body {
   }
 }
 
+/* iOS Safari collapses the address bar on scroll, which changes the viewport
+   height and so the canvas size. Every resize reallocates and clears the WebGL
+   buffer, which flashes. lvh is the height with browser UI retracted, so it
+   does not move while scrolling. The background colour covers any frame the
+   buffer is still empty for. */
+.shader-canvas {
+  height: 100%;
+  background: var(--color-bg);
+}
+
+@supports (height: 100lvh) {
+  .shader-canvas {
+    height: 100lvh;
+  }
+}
+
 /* --- Tooltips ------------------------------------------------------------ */
 /* The label lives in CSS keyed off the preference attribute, so the server
    never has to guess which state it is in. */

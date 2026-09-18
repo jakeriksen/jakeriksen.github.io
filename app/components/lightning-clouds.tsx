@@ -305,6 +305,7 @@ export default function LightningClouds({
     // of the win on touch devices, where nothing moves the pointer. Declared
     // above resize(), which clears it and runs during setup.
     let idlePainted = false;
+    let ready = false;
 
     const RENDER_SCALE = 0.8;
     // Phones render this continuously in ambient mode, on a battery, behind a
@@ -345,7 +346,10 @@ export default function LightningClouds({
     };
     resize();
 
-    const observer = new ResizeObserver(resize);
+    const observer = new ResizeObserver(() => {
+      resize();
+      if (ready) drawScene(performance.now());
+    });
     observer.observe(canvas);
 
     // Pointer state, in the shader's aspect-corrected space.
@@ -508,6 +512,7 @@ export default function LightningClouds({
       frame = requestAnimationFrame(render);
       drawScene(now);
     };
+    ready = true;
     frame = requestAnimationFrame(render);
 
     // A preference flip has to repaint even if the scene had settled, or the
@@ -559,7 +564,7 @@ export default function LightningClouds({
     <canvas
       ref={canvasRef}
       aria-hidden
-      className={`pointer-events-none fixed inset-0 -z-10 h-full w-full bg-black ${className}`}
+      className={`shader-canvas pointer-events-none fixed top-0 left-0 -z-10 w-full ${className}`}
     />
   );
 }

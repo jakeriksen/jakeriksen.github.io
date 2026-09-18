@@ -139,6 +139,9 @@ body {
   }
 }
 
+/* Both icons of each pair ship, and CSS picks one. Choosing in JS would mean
+   the server guessing the preference and mismatching on hydration. */
+
 .pref-theme-day,
 .pref-theme-night,
 .pref-motion-on,
@@ -146,80 +149,7 @@ body {
   display: none;
 }
 
-[data-theme="dark"] /* --- Tooltips ------------------------------------------------------------ */
-/* The label lives in CSS keyed off the preference attribute, so the server
-   never has to guess which state it is in. */
-
-.tip {
-  position: relative;
-}
-
-.tip::after {
-  content: "";
-  position: absolute;
-  z-index: 10;
-  left: 50%;
-  bottom: calc(100% + 0.5rem);
-  translate: -50% 3px;
-  padding: 0.3rem 0.5rem 0.28rem;
-  border: 1px solid var(--color-line);
-  border-radius: 3px;
-  background: var(--color-surface);
-  box-shadow: 0 6px 20px rgb(0 0 0 / 0.28);
-  color: var(--color-ink-dim);
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  line-height: 1;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    opacity 0.16s ease,
-    translate 0.16s ease;
-}
-
-.tip:hover::after,
-.tip:focus-visible::after {
-  opacity: 1;
-  translate: -50% 0;
-}
-
-.tip-below::after {
-  bottom: auto;
-  top: calc(100% + 0.5rem);
-  translate: -50% -3px;
-}
-
-.tip-below:hover::after,
-.tip-below:focus-visible::after {
-  translate: -50% 0;
-}
-
-[data-theme="dark"] .tip-theme::after {
-  content: "Day";
-}
-
-[data-theme="light"] .tip-theme::after {
-  content: "Night";
-}
-
-[data-motion="on"] .tip-motion::after {
-  content: "Ambient";
-}
-
-[data-motion="off"] .tip-motion::after {
-  content: "Follow cursor";
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tip::after {
-    transition: none;
-  }
-}
-
-.pref-theme-day,
+[data-theme="dark"] .pref-theme-day,
 [data-theme="light"] .pref-theme-night,
 [data-motion="on"] .pref-motion-on,
 [data-motion="off"] .pref-motion-off {

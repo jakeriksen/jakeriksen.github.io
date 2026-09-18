@@ -289,7 +289,7 @@ body {
 }
 
 .prose ul > li::before {
-  content: "—";
+  content: "·";
   position: absolute;
   left: -1.25rem;
   color: var(--color-ink-faint);

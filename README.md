@@ -9,7 +9,7 @@ pnpm build
 pnpm lint
 ```
 
-Site-wide details — name, tagline, links — live in `site.config.ts`.
+Site-wide details like name, tagline and links live in `site.config.ts`.
 Set `url` there before deploying: it is the base for every RSS link and OG tag.
 
 There is no CMS here. A post is a markdown file, a deploy is a `git push`, and
@@ -52,10 +52,10 @@ Put the file in `public/` and reference it from the root:
 
 An image on its own line becomes a figure, and the alt text is used as the
 caption. Dark artwork on a transparent background needs a light panel behind
-it or it vanishes in night mode — add `#plate` to ask for one:
+it, or it vanishes in night mode. Add `#plate` to ask for one:
 
 ```markdown
-![The counted wordmark.](/counted-no-bg.png#plate)
+![A logo on a transparent background.](/logo.png#plate)
 ```
 
 ## The fields
@@ -66,9 +66,3 @@ it or it vanishes in night mode — add `#plate` to ask for one:
 - `draft: true` hides an entry in production but keeps it visible in
   `next dev`, so you can work on a post without publishing it.
 - Reading time is counted from the file, not stored in it.
-
-## What you get for free
-
-Code blocks are highlighted, headings get anchor ids, tables and task lists
-work, and `/writing/rss.xml` is generated from the same files. Nothing to
-configure.

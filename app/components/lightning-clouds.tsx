@@ -91,7 +91,7 @@ float cloud(vec2 p) {
   return smoothstep(0.42, 0.74, base);
 }
 
-// Cheap density for the shadow march — four extra taps at full detail is too
+// Cheap density for the shadow march. Four extra taps at full detail is too
 // expensive, and the transmittance term is too soft to show the difference.
 float cloudLow(vec2 p) {
   return smoothstep(0.42, 0.74, fbm3(cloudSpace(p)));
@@ -180,7 +180,7 @@ void main() {
     // Vignette keeps the edges from reading as a hard rectangle.
     color *= 1.0 - 0.55 * smoothstep(0.35, 1.15, length(p * vec2(0.75, 1.0)));
 
-    // Roll highlights off instead of clipping — a bare clamp turns the core of
+    // Roll highlights off instead of clipping. A bare clamp turns the core of
     // the light into a flat white blob and throws away its colour. Day skips
     // this: it would pull an already-bright sky back down to grey.
     color = vec3(1.0) - exp(-color * 1.15);
@@ -211,7 +211,7 @@ const RESTING_Y = 0.26;
 /** How much of the day scene survives the haze. Lower reads calmer. */
 const DAY_CONTRAST = 0.52;
 
-/** Sharp strike, then a decaying flicker — a single exp() reads as a lamp, not lightning. */
+/** Sharp strike, then a decaying flicker. One exp() alone reads as a lamp. */
 function boltEnvelope(t: number): number {
   if (t < 0 || t > 1) return 0;
   const strike = Math.exp(-t * t * 700);
@@ -390,9 +390,9 @@ export default function LightningClouds({
     let running = true;
 
     // Drawing is split from scheduling so a preference change can repaint
-    // immediately. The loop is not always ticking — browsers throttle
-    // requestAnimationFrame in unfocused windows — and with the buffer
-    // preserved the canvas would otherwise keep showing the old theme's frame.
+    // immediately. The loop is not always ticking, because browsers throttle
+    // requestAnimationFrame in unfocused windows, and with the buffer preserved
+    // the canvas would otherwise keep showing the old theme's frame.
     const drawScene = (now: number) => {
 
       const time = now / 1000;
@@ -434,7 +434,7 @@ export default function LightningClouds({
           Math.hypot(pointerX - prevX, pointerY - prevY) / Math.max(dt, 1e-3);
         energy += speed * dt * 4.5;
         energy *= Math.pow(0.02, elapsed);
-        // Snap the tail to zero — an exponential only ever asymptotes, and a
+        // Snap the tail to zero. An exponential only ever asymptotes, and a
         // residual 0.003 still paints a visible haze on an OLED panel.
         energy = energy < 0.004 ? 0 : Math.min(energy, 1);
       } else {

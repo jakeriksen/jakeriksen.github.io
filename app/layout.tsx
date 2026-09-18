@@ -30,7 +30,7 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: `${site.name} — ${site.role}`, template: `%s — ${site.name}` },
+  title: { default: `${site.name} · ${site.role}`, template: `%s · ${site.name}` },
   description: site.description,
   openGraph: {
     title: site.name,
